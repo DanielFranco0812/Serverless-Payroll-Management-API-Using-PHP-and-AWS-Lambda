@@ -205,7 +205,7 @@ $router->post('/api/payslips/([0-9]+)/generate', function ($payrollId) {
             throw new RuntimeException('S3_BUCKET environment variable is not configured.');
         }
 
-        $region = getenv('AWS_REGION') ?: 'ap-southeast-1';
+        $region = getenv('S3_REGION') ?: 'ap-southeast-1';
         $key = "payslips/{$payrollId}.pdf";
         $s3 = new S3Client(['version' => 'latest', 'region' => $region]);
         $s3->putObject([
@@ -214,6 +214,11 @@ $router->post('/api/payslips/([0-9]+)/generate', function ($payrollId) {
             'Body' => $dompdf->output(),
             'ContentType' => 'application/pdf',
         ]);
+        $downloadCommand = $s3->getCommand('GetObject', [
+            'Bucket' => $bucket,
+            'Key' => $key,
+        ]);
+        $downloadUrl = (string) $s3->createPresignedRequest($downloadCommand, '+15 minutes')->getUri();
 
         jsonResponse([
             'success' => true,
@@ -221,7 +226,7 @@ $router->post('/api/payslips/([0-9]+)/generate', function ($payrollId) {
             'data' => [
                 'payroll_id' => (int) $payrollId,
                 's3_key' => $key,
-                'payslip_file' => "https://{$bucket}.s3.{$region}.amazonaws.com/{$key}",
+                'download_url' => $downloadUrl,
             ],
         ]);
     } catch (Throwable $error) {

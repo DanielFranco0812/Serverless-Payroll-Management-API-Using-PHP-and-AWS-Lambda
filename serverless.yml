@@ -7,12 +7,14 @@ provider:
   region: ap-southeast-1
   environment:
     S3_BUCKET: payroll-franco
+    S3_REGION: ap-southeast-1
   iam:
     role:
       statements:
         - Effect: Allow
           Action:
             - s3:PutObject
+            - s3:GetObject
           Resource: arn:aws:s3:::payroll-franco/payslips/*
 
 package:
