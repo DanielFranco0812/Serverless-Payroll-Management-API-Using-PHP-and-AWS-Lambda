@@ -1,0 +1,7 @@
+.env
+.env.*
+!.env.example
+.serverless/
+vendor/
+node_modules/
+*.log

@@ -1,0 +1,16 @@
+{
+    "name": "webandmobiledev/php-bref-payroll-api",
+    "authors": [
+        {
+            "name": "Igor Toledano",
+            "email": "toledano.igor@student.auf.edu.ph"
+        }
+    ],
+    "require": {
+        "bref/bref": "^3.0",
+        "bref/laravel-bridge": "^3.1",
+        "bramus/router": "^1.6",
+        "dompdf/dompdf": "^3.1",
+        "aws/aws-sdk-php": "^3.401"
+    }
+}

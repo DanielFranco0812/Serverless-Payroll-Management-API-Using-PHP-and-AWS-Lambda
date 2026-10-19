@@ -1,0 +1,32 @@
+org: francodanieljehd
+service: php-payroll-api
+
+provider:
+  name: aws
+  runtime: php-82-fpm
+  region: ap-southeast-1
+  environment:
+    S3_BUCKET: payroll-franco
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - s3:PutObject
+          Resource: arn:aws:s3:::payroll-franco/payslips/*
+
+package:
+  patterns:
+    - public/**
+    - data/*.csv
+    - vendor/**
+
+plugins:
+  - ./vendor/bref/bref
+
+functions:
+  api:
+    handler: public/index.php
+    description: 'Serverless PHP Payroll API'
+    events:
+      - httpApi: '*'
